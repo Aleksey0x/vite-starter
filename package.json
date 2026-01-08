@@ -1,0 +1,19 @@
+{
+	"name": "vite",
+	"version": "1.0.0",
+	"description": "Vite project",
+	"main": "js/index.js",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"keywords": [],
+	"author": "Atarax",
+	"license": "ISC",
+	"type": "module",
+	"devDependencies": {
+		"sass-embedded": "^1.97.2",
+		"vite": "^7.3.1"
+	}
+}
