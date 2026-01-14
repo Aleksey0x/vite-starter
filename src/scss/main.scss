@@ -1,6 +1,8 @@
+@use '@scss/fonts.scss' as fonts;
 @use '@scss/variables.scss' as vars;
 
 body {
 	background-color: vars.$blacK;
 	color: vars.$white;
+	font-family: fonts.$montserrat;
 }

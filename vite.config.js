@@ -18,11 +18,11 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			//  алиасы для путей к файлам
-			'@': path.resolve(__dirname, '.'),
-			'@scss': path.resolve(__dirname, 'scss'),
-			'@js': path.resolve(__dirname, 'js'),
-			'@img': path.resolve(__dirname, 'assets', 'img'),
-			'@fonts': path.resolve(__dirname, 'assets', 'fonts'),
+			'@': path.resolve(__dirname, 'src'),
+			'@scss': path.resolve(__dirname, 'src', 'scss'),
+			'@js': path.resolve(__dirname, 'src', 'js'),
+			'@img': path.resolve(__dirname, 'src', 'assets', 'img'),
+			'@fonts': path.resolve(__dirname, 'src', 'assets', 'fonts'),
 		},
 	},
 
@@ -35,6 +35,9 @@ export default defineConfig({
 		minify: 'esbuild',
 		cssMinify: 'esbuild',
 		rollupOptions: {
+			input: {
+				main: path.resolve(__dirname, 'src', 'index.html'),
+			},
 			output: {
 				assetFileNames: (assetInfo) => {
 					let extType = assetInfo.name.split('.').at(-1);
@@ -60,4 +63,5 @@ export default defineConfig({
 		devSourcemap: true,
 	},
 	base: './',
+	root: './src',
 });
