@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,7 +12,7 @@ export default defineConfig({
 		//настройки сервера
 		open: true,
 		port: 3000,
-		host: true,
+		host: false,
 	},
 
 	//настройки путей к файлам
@@ -59,6 +60,12 @@ export default defineConfig({
 	css: {
 		devSourcemap: true,
 	},
+	plugins: [
+		createSvgIconsPlugin({
+			iconDirs: [path.resolve(process.cwd(), 'src/static/icons')],
+			symbolId: 'icon-[name]',
+		}),
+	],
 	base: './',
 	root: './src',
 });
