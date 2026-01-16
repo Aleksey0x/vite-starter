@@ -26,14 +26,14 @@ project-root/              # Корень проекта
 │  │  ├─ components/       # Компоненты (опционально)
 │  │  └─ utils/            # Утилиты и хелперы
 │  │
-│  ├─ styles/              # Стили (лучше использовать styles вместо scss)
-│  │  ├─ main.scss         # Главный SCSS файл
-│  │  ├─ variables.scss    # SCSS переменные
-│  │  ├─ base/             # Базовые стили (reset, typography)
-│  │  ├─ components/       # Стили компонентов
-│  │  └─ layout/           # Стили макета
-│  │
-│  └─ css/                 # Скомпилированный CSS (опционально)
+│  └─ scss/              # Стили (лучше использовать styles вместо scss)
+│     ├─ main.scss         # Главный SCSS файл
+│     ├─ variables.scss    # SCSS переменные
+│     ├─ base/             # Базовые стили (reset, typography)
+│     ├─ components/       # Стили компонентов
+│     └─ layout/           # Стили макета
+│
+│  
 │
 ├─ dist/                   # Сборка проекта (генерируется автоматически)
 │   ├─ assets/             # Оптимизированные ресурсы

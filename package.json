@@ -7,15 +7,27 @@
 		"dev": "vite",
 		"build": "vite build",
 		"preview": "vite preview",
-		"fonts": "node convertFonts.js"
+		"fonts": "node scripts/convertFonts.js",
+		"images": "node scripts/images.js"
 	},
+	"browserslist": [
+		"> 1%",
+		"last 2 versions",
+		"not dead",
+		"not ie 11"
+	],
 	"keywords": [],
 	"author": "Atarax",
 	"license": "ISC",
 	"type": "module",
 	"devDependencies": {
+		"@fullhuman/postcss-purgecss": "^7.0.2",
+		"autoprefixer": "^10.4.23",
 		"fs-extra": "^11.3.3",
+		"glob": "^13.0.0",
+		"postcss": "^8.5.6",
 		"sass-embedded": "^1.97.2",
+		"sharp": "^0.34.5",
 		"ttf2woff": "^3.0.0",
 		"ttf2woff2": "^8.0.0",
 		"vite": "^7.3.1"

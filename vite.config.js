@@ -28,16 +28,13 @@ export default defineConfig({
 
 	// настройки сборки
 	build: {
-		outDir: 'dist',
+		outDir: '../dist',
 		emptyOutDir: true,
 		assetsDir: 'assets',
 		sourcemap: 'hidden',
 		minify: 'esbuild',
 		cssMinify: 'esbuild',
 		rollupOptions: {
-			input: {
-				main: path.resolve(__dirname, 'src', 'index.html'),
-			},
 			output: {
 				assetFileNames: (assetInfo) => {
 					let extType = assetInfo.name.split('.').at(-1);
