@@ -14,6 +14,7 @@
 		"svg:trim:icons": "node scripts/trim-icon-svg.js",
 		"icons:hero": "node scripts/build-hero-sprite.js",
 		"icons:html": "node scripts/generate-icons-html.js",
+		"deploy:gh": "vite build && gh-pages -d dist",
 		"assets:prepare": "npm run fonts:build && npm run images:optimize && npm run svg:trim && npm run icons:hero"
 	},
 	"browserslist": [
@@ -34,6 +35,7 @@
 		"fast-glob": "^3.3.3",
 		"fast-xml-parser": "^5.3.3",
 		"fs-extra": "^11.3.3",
+		"gh-pages": "^6.3.0",
 		"glob": "^13.0.0",
 		"postcss": "^8.5.6",
 		"postcss-sort-media-queries": "^5.2.0",
