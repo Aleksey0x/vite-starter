@@ -6,10 +6,15 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
+		"build:analyze": "vite build && explorer dist\\stats.html",
 		"preview": "vite preview",
-		"fonts": "node scripts/convertFonts.js",
-		"images": "node scripts/images.js",
-		"icons:clean": "node scripts/trim-svg.js"
+		"fonts:build": "node scripts/build-fonts.js",
+		"images:optimize": "node scripts/optimize-images.js",
+		"svg:trim": "node scripts/trim-svg.js",
+		"svg:trim:icons": "node scripts/trim-icon-svg.js",
+		"icons:hero": "node scripts/build-hero-sprite.js",
+		"icons:html": "node scripts/generate-icons-html.js",
+		"assets:prepare": "npm run fonts:build && npm run images:optimize && npm run svg:trim && npm run icons:hero"
 	},
 	"browserslist": [
 		"> 1%",
@@ -24,18 +29,27 @@
 	"devDependencies": {
 		"@fullhuman/postcss-purgecss": "^7.0.2",
 		"autoprefixer": "^10.4.23",
+		"critters": "^0.0.23",
+		"cssnano": "^7.1.2",
 		"fast-glob": "^3.3.3",
 		"fast-xml-parser": "^5.3.3",
 		"fs-extra": "^11.3.3",
 		"glob": "^13.0.0",
 		"postcss": "^8.5.6",
+		"postcss-sort-media-queries": "^5.2.0",
+		"prettier": "^3.8.0",
+		"rollup-plugin-visualizer": "^6.0.5",
 		"sass-embedded": "^1.97.2",
 		"sharp": "^0.34.5",
 		"svg-path-bounding-box": "^1.0.4",
 		"svgo": "^4.0.0",
-		"ttf2woff": "^3.0.0",
 		"ttf2woff2": "^8.0.0",
 		"vite": "^7.3.1",
+		"vite-plugin-compression2": "^2.4.0",
+		"vite-plugin-html": "^3.2.2",
 		"vite-plugin-svg-icons": "^2.0.1"
+	},
+	"dependencies": {
+		"bootstrap": "^5.3.8"
 	}
 }

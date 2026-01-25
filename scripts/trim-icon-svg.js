@@ -4,8 +4,8 @@ import { optimize } from 'svgo';
 import bbox from 'svg-path-bounding-box';
 import { XMLParser } from 'fast-xml-parser';
 
-const SRC = 'src/raw/svg';
-const OUT = 'src/assets/img/svg';
+const SRC = 'src/raw/icons';
+const OUT = 'src/assets/icons/optimized';
 const PADDING = 0; // можно поставить 1–2 если нужно
 
 fs.mkdirSync(OUT, { recursive: true });

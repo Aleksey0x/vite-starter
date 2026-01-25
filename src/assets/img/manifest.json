@@ -1,48 +1,35 @@
 {
-  "hero-bg": {
-    "webp": {
+  "logo": {
+    "avif": {
       "srcset": [
-        "hero/hero-bg-640.webp 640w",
-        "hero/hero-bg-1024.webp 1024w",
-        "hero/hero-bg-1440.webp 1440w",
-        "hero/hero-bg-1920.webp 1920w",
-        "hero/hero-bg-2560.webp 2560w"
+        "logo/logo-170.avif 170w",
+        "logo/logo-240.avif 240w",
+        "logo/logo-340.avif 340w",
+        "logo/logo-480.avif 480w",
+        "logo/logo-680.avif 680w"
       ],
-      "sizes": "100vw"
+      "sizes": ""
     },
-    "jpg": {
-      "srcset": [
-        "hero/hero-bg-640.jpg 640w",
-        "hero/hero-bg-1024.jpg 1024w",
-        "hero/hero-bg-1440.jpg 1440w",
-        "hero/hero-bg-1920.jpg 1920w",
-        "hero/hero-bg-2560.jpg 2560w"
-      ],
-      "sizes": "100vw",
-      "src": "hero/hero-bg-1440.jpg"
-    }
-  },
-  "vite-logo": {
     "webp": {
       "srcset": [
-        "logo/vite-logo-170.webp 170w",
-        "logo/vite-logo-240.webp 240w",
-        "logo/vite-logo-340.webp 340w",
-        "logo/vite-logo-480.webp 480w",
-        "logo/vite-logo-680.webp 680w"
+        "logo/logo-170.webp 170w",
+        "logo/logo-240.webp 240w",
+        "logo/logo-340.webp 340w",
+        "logo/logo-480.webp 480w",
+        "logo/logo-680.webp 680w"
       ],
       "sizes": ""
     },
     "png": {
       "srcset": [
-        "logo/vite-logo-170.png 170w",
-        "logo/vite-logo-240.png 240w",
-        "logo/vite-logo-340.png 340w",
-        "logo/vite-logo-480.png 480w",
-        "logo/vite-logo-680.png 680w"
+        "logo/logo-170.png 170w",
+        "logo/logo-240.png 240w",
+        "logo/logo-340.png 340w",
+        "logo/logo-480.png 480w",
+        "logo/logo-680.png 680w"
       ],
       "sizes": "",
-      "src": "logo/vite-logo-340.png"
+      "src": "logo/logo-340.png"
     }
   }
 }

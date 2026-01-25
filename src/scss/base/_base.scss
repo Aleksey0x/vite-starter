@@ -1,0 +1,37 @@
+@use '../abstracts/variables';
+
+
+body {
+	// background-color: variables.$black;
+	color: variables.$white;
+	font-family: variables.$font-main;
+	overflow-x: hidden;
+
+	// Выделение текста белым цветом
+	::selection {
+		background: variables.$white;
+		color: variables.$black;
+	}
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: variables.$font-accent;
+}
+
+picture {
+	img {
+		width: 100%;
+	}
+}
+
+.icon {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	fill: variables.$white;
+}

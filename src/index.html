@@ -1,40 +1,55 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
-	</head>
-	<body>
-		<h1 class="font-thin">Hello World</h1>
-		<h1 class="font-extralight">Hello World</h1>
-		<h1 class="font-light">Hello World</h1>
-		<h1 class="font-regular">Hello World</h1>
-		<h1 class="font-medium">Hello World</h1>
-		<h1 class="font-semibold">Hello World</h1>
-		<h1 class="font-bold">Hello World</h1>
-		<h1 class="font-extrabold">Hello World</h1>
-		<h1 class="font-black">Hello World</h1>
-		<svg class="icon" aria-hidden="true" focusable="false">
-			<use href="#icon-vk-brands-solid-full"></use>
-		</svg>
-		<svg class="icon" aria-hidden="true" focusable="false">
-			<use href="#icon-instagram-brands-solid-full"></use>
-		</svg>
-		<svg class="icon" aria-hidden="true" focusable="false">
-			<use href="#icon-telegram-brands-solid-full"></use>
-		</svg>
 
-		<h1 class="font-thin italic">Hello World</h1>
-		<h1 class="font-extralight italic">Hello World</h1>
-		<h1 class="font-light italic">Hello World</h1>
-		<h1 class="font-regular italic">Hello World</h1>
-		<h1 class="font-medium italic">Hello World</h1>
-		<h1 class="font-semibold italic">Hello World</h1>
-		<h1 class="font-bold italic">Hello World</h1>
-		<h1 class="font-extrabold italic">Hello World</h1>
-		<h1 class="font-black italic">Hello World</h1>
-	</body>
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Document</title>
+	<link rel="preload" href="./assets/fonts/Manrope-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
+	<link rel="preload" href="./assets/fonts/Manrope-Regular.woff2" as="font" type="font/woff2" crossorigin />
+	<link rel="preload" href="./assets/fonts/InterTight-Regular.woff2" as="font" type="font/woff2" crossorigin />
+</head>
 
-	<script type="module" src="/js/entry.js"></script>
+<body>
+	<header class="header">
+	</header>
+	<main class="main">
+
+		<section class="hero">
+			<div class="hero__container container">
+				<div class="row min-vh-100 align-items-center">
+					<div class="col-lg-10 d-flex flex-column">
+						<h1 class="hero__title">
+							Build static frontends.<br />
+							Without build chaos.<span class="hero__cursor" aria-hidden="true"></span></h1>
+						<p class="hero__subtitle">
+							An opinionated Vite setup.<br />Focused on output quality.
+
+						</p>
+
+						<p class="hero__description">
+							Images • SVG • Fonts • CSS — handled once, used everywhere.
+						</p>
+						<span>
+							<a href="https://github.com/Aleksey0x/vite_2026" target="_blank"
+								class="d-inline-flex align-items-center gap-2">
+								<svg class="icon" aria-hidden="true" focusable="false">
+									<use href="#hero-github-brands-solid-full"></use>
+								</svg>
+								<span>View source</span>
+							</a>
+						</span>
+
+
+					</div>
+
+				</div>
+			</div>
+		</section>
+	</main>
+
+</body>
+
+<script type="module" src="/js/entry.js"></script>
+
 </html>

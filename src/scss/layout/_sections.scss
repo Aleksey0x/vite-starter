@@ -1,0 +1,60 @@
+@use '../abstracts/mq';
+@use '../abstracts/variables';
+
+.hero {
+	// background-color: variables.$black;
+	// background-image: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0) 60%);
+	background-image: radial-gradient(circle at 30% 50%, #1f2329, #0E0F12 70%);
+	// background-blend-mode: screen, screen, screen, normal;
+
+	&__title {
+
+		font-size: 42px;
+		font-weight: 600;
+		line-height: 1.08;
+		letter-spacing: -0.02em;
+
+		@include mq.up(md) {
+			font-size: 52px;
+		}
+
+	}
+
+	&__subtitle {
+		font-family: variables.$font-accent;
+		font-size: 16px;
+		font-weight: 400;
+		line-height: 1.5;
+		opacity: 0.85;
+
+		@include mq.up(md) {
+			font-size: 18px;
+		}
+	}
+
+	&__description {
+
+
+		font-size: 13px;
+		letter-spacing: 0.02em;
+		opacity: 0.6;
+
+	}
+
+	.hero__cursor {
+		display: inline-block;
+		width: 5px;
+		height: 1em;
+		margin-left: 0.25ch;
+		background: variables.$white;
+		animation: blink 1s infinite;
+		vertical-align: bottom;
+	}
+
+}
+
+@keyframes blink {
+	50% {
+		opacity: 0;
+	}
+}

@@ -1,46 +1,54 @@
-project-root/              # Корень проекта
-├─ index.html              # Точка входа HTML (можно перенести в src/)
-├─ vite.config.js          # Конфигурация Vite
-├─ package.json            # Зависимости проекта
-├─ package-lock.json       # Фиксация версий пакетов
-├─ .prettierrc.json        # Настройки Prettier
-├─ .gitignore              # Игнорируемые файлы для Git
-├─ convertFonts.js         # Скрипт конвертации шрифтов
+.
+├─ .cursor/                  # правила Cursor (architect mode, response rules)
+├─ dist/                     # результат сборки (gitignore)
+├─ node_modules/             # зависимости
+├─ scripts/                  # node-скрипты сборки (НЕ runtime)
+│  ├─ build-fonts.js
+│  ├─ build-hero-sprite.js
+│  ├─ generate-icons-html.js
+│  ├─ optimize-images.js
+│  ├─ trim-icon-svg.js
+│  └─ trim-svg.js
 │
-├─ src/                    # Исходный код приложения (ОСНОВНАЯ ПАПКА!)
-│  ├─ index.html           # Альтернативно: HTML можно держать здесь
+├─ src/
+│  ├─ assets/                # ВСЕ обрабатываемые ассеты
+│  │  ├─ fonts/              # готовые шрифты (после build-fonts)
+│  │  ├─ icons/
+│  │  │  ├─ critical/        # SVG для первого экрана → inline sprite в HTML
+│  │  │  ├─ optimized/       # оптимизированные SVG (общие)
+│  │  │  └─ rest/            # SVG для JS-спрайта
+│  │  ├─ img/                # растровые изображения (optimized)
+│  │  └─ svg/                # НЕ иконки: bg, иллюстрации, декор
 │  │
-│  ├─ assets/              # Ресурсы для импорта в код (управляемые Vite)
-│  │  ├─ fonts/            # Сконвертированные шрифты (.woff, .woff2)
-│  │  ├─ icons/            # Иконки (оптимизированные .svg)
-│  │  └─ img/              # Изображения (обработанные)
+│  ├─ dev/                   # dev-only артефакты
+│  │  ├─ icons.html          # страница просмотра всех иконок
+│  │  └─ icons-html.css
 │  │
-│  ├─ static/              # Статические исходные файлы (не обрабатываются Vite)
-│  │  ├─ fonts/            # Исходные шрифты для конвертации (.ttf, .otf)
-│  │  ├─ icons/            # Исходные иконки
-│  │  └─ img/              # Исходные изображения для обработки
+│  ├─ js/
+│  │  ├─ entry.js            # точка входа
+│  │  └─ main.js
 │  │
-│  ├─ js/                  # JavaScript файлы
-│  │  ├─ entry.js          # Главный entry-point JS
-│  │  ├─ main.js           # Основная логика приложения
-│  │  ├─ components/       # Компоненты (опционально)
-│  │  └─ utils/            # Утилиты и хелперы
+│  ├─ raw/                   # исходники, не идут в билд
+│  │  ├─ fonts/
+│  │  ├─ icons/
+│  │  ├─ img/
+│  │  └─ svg/
 │  │
-│  └─ scss/              # Стили (лучше использовать styles вместо scss)
-│     ├─ main.scss         # Главный SCSS файл
-│     ├─ variables.scss    # SCSS переменные
-│     ├─ base/             # Базовые стили (reset, typography)
-│     ├─ components/       # Стили компонентов
-│     └─ layout/           # Стили макета
+│  └─ scss/
+│     ├─ variables.scss
+│     ├─ reset.scss
+│     ├─ fonts.scss
+│     └─ main.scss
 │
-│  
+├─ static/                   # файлы без обработки (минимум!)
+│  └─ index.html
 │
-├─ dist/                   # Сборка проекта (генерируется автоматически)
-│   ├─ assets/             # Оптимизированные ресурсы
-│   └─ index.html          # Собранный HTML
-│
-├─ node_modules/           # Зависимости npm (автогенерируется)
-│
-└─ .cursor/                # Конфигурация Cursor AI
-   └─ docs/
-      └─ project-structure.md
+├─ index.html                # основной HTML (vite)
+├─ vite.config.js
+├─ postcss.config.js
+├─ package.json
+├─ package-lock.json
+├─ stats.html                # build-analyze (dev-only)
+├─ README.md
+├─ .gitignore
+└─ .prettierrc.json

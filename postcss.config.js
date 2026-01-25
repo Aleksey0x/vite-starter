@@ -1,22 +1,42 @@
 import autoprefixer from 'autoprefixer';
 import purgecss from '@fullhuman/postcss-purgecss';
-const isProd = process.env.NODE_ENV === 'production';
+import sortMediaQueries from 'postcss-sort-media-queries';
+import cssnano from 'cssnano';
+
 const purge = purgecss.default ?? purgecss;
 
-export default {
-	plugins: [
-		autoprefixer(),
+export default ({ env }) => {
+	const isProd =
+		env === 'production' ||
+		process.env.NODE_ENV === 'production';
 
-		isProd &&
-			purge({
-				content: ['./src/index.html', './src/**/*.{js,ts,jsx,tsx,vue,html}'],
+	return {
+		plugins: [
+			autoprefixer(),
 
-				defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
-
+			isProd && purge({
+				content: ['./src/**/*.html', './src/js/**/*.js'],
+				defaultExtractor: (content) => {
+					// Игнорируем HTML-комментарии
+					const clean = content.replace(/<!--[\s\S]*?-->/g, '');
+					return clean.match(/[\w-/:]+(?<!:)/g) || [];
+				},
 				safelist: {
-					standard: ['active', 'open', 'show'],
-					deep: [/^swiper-/, /^modal-/],
+					standard: ['active', 'show', 'hide', 'fade', 'collapse', 'collapsed'],
+					deep: [/^swiper/],
+					greedy: [/\[data-/, /\[aria-/],
 				},
 			}),
-	].filter(Boolean),
+
+			isProd && sortMediaQueries({ sort: 'mobile-first' }),
+
+			isProd && cssnano({
+				preset: ['default', {
+					discardComments: { removeAll: true },
+					zindex: false,
+					calc: false,
+				}],
+			}),
+		].filter(Boolean),
+	};
 };

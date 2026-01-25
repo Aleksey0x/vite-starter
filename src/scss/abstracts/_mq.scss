@@ -1,0 +1,92 @@
+$breakpoints: (
+	xs: 360px,
+	sm: 480px,
+	md: 768px,
+	lg: 1024px,
+	xl: 1280px,
+	xxl: 1440px,
+	xxxl: 1920px,
+	) !default;
+
+@use "sass:map";
+@use "sass:meta";
+@use "sass:math";
+
+
+
+
+@function bp($key) {
+	@if meta.type-of($key)==number {
+		@return $key;
+	}
+
+	@if map.has-key($breakpoints, $key) {
+		@return map.get($breakpoints, $key
+	);
+}
+
+@error "Unknown breakpoint `#{$key}`. Available: #{map.keys($breakpoints)} or pass a number (e.g. 900px).";
+}
+
+@function _max($key) {
+	// анти-оверлап: max-width на 0.02px меньше следующего min-width
+	@return bp($key) - 0.02px;
+}
+
+// Mobile-first: базовые стили без media, дальше расширяем min-width
+@mixin up($from) {
+	@media (min-width: bp($from)) {
+		@content;
+	}
+}
+
+// Использовать редко (обычно для «только мобилка»/«только до X»)
+@mixin down($to) {
+	@media (max-width: _max($to)) {
+		@content;
+	}
+}
+
+// Узкие случаи: правки строго в коридоре
+@mixin between($from, $to) {
+	@media (min-width: bp($from)) and (max-width: _max($to)) {
+		@content;
+	}
+}
+
+// Если нужен «строго один диапазон», без пересечений
+@mixin only($from, $to) {
+	@include between($from, $to) {
+		@content;
+	}
+}
+
+// Hover-стили только там, где hover реально есть (не ломает тач)
+@mixin hover {
+	@media (hover: hover) and (pointer: fine) {
+		&:hover {
+			@content;
+		}
+	}
+}
+
+// Reduced motion: отключение анимаций/плавностей для accessibility
+@mixin reduce-motion {
+	@media (prefers-reduced-motion: reduce) {
+		@content;
+	}
+}
+
+// Retina-фоны/иконки
+@mixin retina($dppx: 2) {
+	@media (min-resolution: #{$dppx}dppx) {
+		@content;
+	}
+}
+
+// Container query (если вы делаете компоненты, завязанные на ширину контейнера)
+@mixin cq-up($min) {
+	@container (min-width: bp($min)) {
+		@content;
+	}
+}
