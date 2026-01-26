@@ -1,15 +1,15 @@
 @use 'abstracts/variables';
 @use 'abstracts/mq';
 
-@use 'base/reset';
-@use 'base/fonts';
-@use 'base/base';
+@use "base/reset";
+@use "base/fonts";
+@use "base/base";
 
-@use 'layout/header';
-@use 'layout/footer';
-@use 'layout/sections';
+@use "layout/header";
+@use "layout/footer";
+@use "layout/sections";
 
-@use 'components/button';
-@use 'components/card';
+@use "components/button";
+@use "components/card";
 
-@import 'bootstrap/dist/css/bootstrap-grid.min.css';
+@import "bootstrap/dist/css/bootstrap.min.css";
