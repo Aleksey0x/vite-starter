@@ -1,0 +1,46 @@
+name: Full Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Получаем код
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      # Настраиваем Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # Устанавливаем зависимости
+      - name: Install dependencies
+        run: npm ci
+
+      # Собираем проект
+      - name: Build project
+        run: npm run build
+
+      # Деплой на GitHub Pages
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: dist
+          publish_branch: gh-pages
+          force_orphan: true       # создаёт orphan-ветку заново
+          keep_files: false        # удаляет всё старое
+          commit_message: "Deploy from Actions [skip ci]"
+          user_name: "github-actions"
+          user_email: "github-actions@github.com"
