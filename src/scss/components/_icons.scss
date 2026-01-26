@@ -1,0 +1,31 @@
+.icon {
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	fill: currentColor;
+
+	&-sm {
+		width: 20px;
+		height: 20px;
+	}
+
+	&-md {
+		width: 28px;
+		height: 28px;
+	}
+
+	&-lg {
+		width: 36px;
+		height: 36px;
+	}
+
+	&-xl {
+		width: 48px;
+		height: 48px;
+	}
+
+	&-xxl {
+		width: 64px;
+		height: 64px;
+	}
+}

@@ -52,6 +52,7 @@
 		"vite-plugin-svg-icons": "^2.0.1"
 	},
 	"dependencies": {
-		"bootstrap": "^5.3.8"
+		"bootstrap": "^5.3.8",
+		"slideout": "^1.0.1"
 	}
 }

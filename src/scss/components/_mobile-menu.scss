@@ -1,0 +1,21 @@
+@use "../abstracts/variables.scss";
+
+.mobile-menu {
+	padding: 1em;
+	background-color: variables.$white;
+
+}
+
+.slideout-panel {
+	position: relative;
+
+	&::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 2px;
+		height: 100%;
+		background-color: variables.$black;
+	}
+}

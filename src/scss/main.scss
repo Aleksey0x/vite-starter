@@ -1,15 +1,32 @@
 @use 'abstracts/variables';
 @use 'abstracts/mq';
 
+
+
 @use "base/reset";
 @use "base/fonts";
 @use "base/base";
+@use "base/bootstrap";
 
 @use "layout/header";
 @use "layout/footer";
 @use "layout/sections";
+@use "layout/navigation";
 
 @use "components/button";
 @use "components/card";
+@use "components/mobile-menu.scss";
+@use "components/icons.scss";
 
-@import "bootstrap/dist/css/bootstrap.min.css";
+
+
+// @import "bootstrap/scss/functions";
+// @import "bootstrap/scss/variables";
+// @import "bootstrap/scss/maps";
+// @import "bootstrap/scss/mixins";
+
+// @import "bootstrap/scss/reboot";
+// @import "bootstrap/scss/containers";
+// @import "bootstrap/scss/grid";
+// @import "bootstrap/dist/css/bootstrap-grid.min.css";
+// @import "bootstrap/dist/css/reboot.min.css";

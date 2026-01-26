@@ -3,10 +3,9 @@
 
 
 .hero {
-	// background-color: variables.$black;
-	// background-image: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0) 60%);
-	background-image: radial-gradient(circle at 30% 50%, #1f2329, #0E0F12 70%);
-	// background-blend-mode: screen, screen, screen, normal;
+	background-color: variables.$black;
+	background-image: variables.$gradient-1;
+	color: variables.$white;
 
 	&__title {
 
@@ -58,4 +57,11 @@
 	50% {
 		opacity: 0;
 	}
+}
+
+
+
+.readme-section {
+	background-color: variables.$white;
+	color: variables.$black;
 }

@@ -3,7 +3,7 @@
 
 body {
 	// background-color: variables.$black;
-	color: variables.$white;
+	color: variables.$black;
 	font-family: variables.$font-main;
 	overflow-x: hidden;
 
@@ -29,9 +29,30 @@ picture {
 	}
 }
 
-.icon {
-	display: inline-block;
-	width: 20px;
-	height: 20px;
-	fill: variables.$white;
+.min-vh-100 {
+	min-height: 100vh;
+}
+
+.gap-1 {
+	gap: 0.25rem;
+}
+
+.gap-2 {
+	gap: 0.5rem;
+}
+
+.gap-3 {
+	gap: 1rem;
+}
+
+.gap-4 {
+	gap: 1.5rem;
+}
+
+.gap-5 {
+	gap: 2rem;
+}
+
+.gap-6 {
+	gap: 2.5rem;
 }
