@@ -9,6 +9,9 @@
 	-webkit-overflow-scrolling: touch;
 	z-index: 0;
 	display: none;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 .slideout-menu-left {
@@ -35,9 +38,6 @@
 
 .slideout-open .slideout-menu {
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
 }
 
 //	UI LAYER

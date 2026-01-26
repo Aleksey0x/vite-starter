@@ -22,7 +22,21 @@ export default ({ env }) => {
 					return clean.match(/[\w-/:]+(?<!:)/g) || [];
 				},
 				safelist: {
-					standard: ['active', 'show', 'hide', 'fade', 'collapse', 'collapsed'],
+					standard: [
+						'active',
+						'show',
+						'hide',
+						'fade',
+						'collapse',
+						'collapsed',
+						'slideout',
+						'slideout-panel',
+						'slideout-open',
+						'slideout-close',
+						'slideout-menu',
+						'slideout-menu-left',
+						'slideout-menu-right',
+					],
 					deep: [/^swiper/],
 					greedy: [/\[data-/, /\[aria-/],
 				},
