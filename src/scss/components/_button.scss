@@ -3,9 +3,9 @@
 .burger-button {
 	width: 46px;
 	height: 46px;
-	background-color: variables.$white;
-	border: 2px solid variables.$black;
-
+	background-color: transparent;
+	color: variables.$white;
+	border: none;
 	display: flex;
 	align-items: center;
 	justify-content: center;

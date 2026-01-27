@@ -3,9 +3,8 @@
 
 
 .hero {
-	background-color: variables.$black;
 	background-image: variables.$gradient-1;
-	color: variables.$white;
+	background-color: variables.$black;
 
 	&__title {
 
@@ -53,15 +52,12 @@
 
 }
 
+.readme-section {
+	background-color: variables.$black;
+}
+
 @keyframes blink {
 	50% {
 		opacity: 0;
 	}
-}
-
-
-
-.readme-section {
-	background-color: variables.$white;
-	color: variables.$black;
 }

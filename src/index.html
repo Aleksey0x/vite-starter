@@ -5,31 +5,50 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Document</title>
+	<!-- Favicon -->
+	<!-- Стандартная иконка -->
+	<link rel="icon" href="./static/favicon/favicon.ico" type="image/x-icon">
+	<link rel="shortcut icon" href="./static/favicon/favicon.ico" type="image/x-icon">
+	<!-- Для современных браузеров -->
+	<link rel="icon" type="image/png" sizes="32x32" href="./static/favicon/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="./static/favicon//favicon-16x16.png">
+	<!-- Apple Touch Icon -->
+	<link rel="apple-touch-icon" sizes="180x180" href="./static/favicon/apple-touch-icon.png">
+	<!-- Android Chrome -->
+	<link rel="manifest" href="./static/favicon/site.webmanifest">
+	<!-- /Favicon -->
+	<!-- Fonts -->
 	<link rel="preload" href="./assets/fonts/Manrope-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
 	<link rel="preload" href="./assets/fonts/Manrope-Regular.woff2" as="font" type="font/woff2" crossorigin />
 	<link rel="preload" href="./assets/fonts/InterTight-Regular.woff2" as="font" type="font/woff2" crossorigin />
+	<!-- /Fonts -->
 </head>
 
 <body>
-
-
+	<!-- UI Layer -->
 	<div class="ui-layer">
 		<div class="container ui-container">
+
+			<!-- Burger Button -->
 			<button class="burger burger-button" id="menu-toggle">
 				<svg class="icon" aria-hidden="true" focusable="false">
 					<use href="#hero-bars-solid-full"></use>
 				</svg>
 			</button>
+			<!-- /Burger Button -->
+
 		</div>
 	</div>
+	<!-- /UI Layer -->
 
+	<!-- Mobile Menu -->
 	<nav id="menu" class="mobile-menu gap-4">
-		<a href="#" class="mobile-menu__item gap">
+		<a href="#" class="mobile-menu__item">
 			<svg class="icon icon-xl" aria-hidden="true" focusable="false">
 				<use href="#hero-telegram-brands-solid-full"></use>
 			</svg>
 		</a>
-		<a href="#" class="mobile-menu__item gap">
+		<a href="#" class="mobile-menu__item">
 			<svg class="icon icon-xl" aria-hidden="true" focusable="false">
 				<use href="#hero-at-solid-full"></use>
 			</svg>
@@ -41,14 +60,12 @@
 		</a>
 
 	</nav>
+	<!-- /Mobile Menu -->
 
-	<header class="header">
-	</header>
+	<!-- Main -->
 	<main class="main" id="panel">
-
 		<section class="hero">
 			<div class="hero__container container">
-
 				<div class="row min-vh-100 align-items-center">
 					<div class="col-lg-10 d-flex flex-column">
 						<h1 class="hero__title">
@@ -58,7 +75,6 @@
 							An opinionated Vite setup.<br />Focused on output quality.
 
 						</p>
-
 						<p class="hero__description">
 							Images • SVG • Fonts • CSS — handled once, used everywhere.
 						</p>
@@ -71,19 +87,18 @@
 								<span>View source</span>
 							</a>
 						</span>
-
-
 					</div>
-
 				</div>
 			</div>
 		</section>
+		<!-- /Hero -->
 
+		<!-- Readme -->
 		<section class="min-vh-100 readme-section">
-
 		</section>
 
 	</main>
+	<!-- /Main -->
 
 </body>
 
