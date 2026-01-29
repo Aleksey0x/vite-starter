@@ -70,8 +70,8 @@ export default defineConfig({
 				critical: [
 					'at-solid-full',
 					'bars-solid-full',
-					// 'github-brands-solid-full',
-					// 'telegram-brands-solid-full',
+					'github-brands-solid-full',
+					'telegram-brands-solid-full',
 				],
 			},
 		}),
