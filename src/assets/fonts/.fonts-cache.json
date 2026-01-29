@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "files": {
+    "InterTight-Bold.ttf": {
+      "mtimeMs": 1769590722681.271,
+      "size": 310016,
+      "fontId": "intertight-700-normal",
+      "output": "InterTight-Bold.woff2"
+    },
+    "InterTight-Regular.ttf": {
+      "mtimeMs": 1769590722718.549,
+      "size": 305468,
+      "fontId": "intertight-400-normal",
+      "output": "InterTight-Regular.woff2"
+    },
+    "InterTight-SemiBold.ttf": {
+      "mtimeMs": 1769590722720.7812,
+      "size": 309392,
+      "fontId": "intertight-600-normal",
+      "output": "InterTight-SemiBold.woff2"
+    },
+    "InterTight-Thin.ttf": {
+      "mtimeMs": 1769590722727.229,
+      "size": 305936,
+      "fontId": "intertight-100-normal",
+      "output": "InterTight-Thin.woff2"
+    },
+    "Manrope-Bold.ttf": {
+      "mtimeMs": 1769590722731.2456,
+      "size": 96800,
+      "fontId": "manrope-700-normal",
+      "output": "Manrope-Bold.woff2"
+    },
+    "Manrope-Regular.ttf": {
+      "mtimeMs": 1769590722731.2456,
+      "size": 96832,
+      "fontId": "manrope-400-normal",
+      "output": "Manrope-Regular.woff2"
+    },
+    "Manrope-SemiBold.ttf": {
+      "mtimeMs": 1769590722731.2456,
+      "size": 96936,
+      "fontId": "manrope-600-normal",
+      "output": "Manrope-SemiBold.woff2"
+    }
+  },
+  "generated": [
+    "InterTight-Bold.woff2",
+    "InterTight-Regular.woff2",
+    "InterTight-SemiBold.woff2",
+    "InterTight-Thin.woff2",
+    "Manrope-Bold.woff2",
+    "Manrope-Regular.woff2",
+    "Manrope-SemiBold.woff2"
+  ]
+}

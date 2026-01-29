@@ -1,11 +1,11 @@
 import { defineConfig } from 'vite';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import fs from 'node:fs';
 import { compression } from 'vite-plugin-compression2';
 import { createHtmlPlugin } from 'vite-plugin-html';
 import { visualizer } from 'rollup-plugin-visualizer';
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
+import { iconsPipelinePlugin } from './plugins/icons-pipeline/index.js';
+import fontsConverter from './plugins/vite-plugin-fonts-converter/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,6 +25,10 @@ export default defineConfig({
 			'@js': path.resolve(__dirname, 'src', 'js'),
 			'@img': path.resolve(__dirname, 'src', 'assets', 'img'),
 			'@fonts': path.resolve(__dirname, 'src', 'assets', 'fonts'),
+			'@fonts/raw': path.resolve(__dirname, 'src', 'raw', 'fonts'),
+			'@icons': path.resolve(__dirname, 'src', 'assets', 'icons'),
+			'@icons/raw': path.resolve(__dirname, 'src', 'raw', 'icons'),
+			'@dev': path.resolve(__dirname, 'src', 'dev'),
 		},
 	},
 
@@ -58,22 +62,33 @@ export default defineConfig({
 	},
 
 	plugins: [
-		// SVG спрайт
-		createSvgIconsPlugin({
-			iconDirs: [path.resolve(process.cwd(), 'src/assets/icons/rest')],
-			symbolId: 'icon-[name]',
+		iconsPipelinePlugin({
+			rawDir: '@icons/raw',
+			outDir: '@icons',
+			catalogDir: '@dev',
+			rules: {
+				critical: [
+					'at-solid-full',
+					'bars-solid-full',
+					// 'github-brands-solid-full',
+					// 'telegram-brands-solid-full',
+				],
+			},
 		}),
 
-		// Критический SVG спрайт: инлайн в HTML
-		{
-			name: 'inline-hero-sprite',
-			transformIndexHtml(html) {
-				const spritePath = path.resolve(__dirname, 'src/assets/icons/critical/sprite.svg');
-				if (!fs.existsSync(spritePath)) return html;
-				const sprite = fs.readFileSync(spritePath, 'utf8');
-				return html.replace('<body>', `<body>\n${sprite}`);
+		fontsConverter({
+			sourceDir: '@fonts/raw',
+			outputDir: '@fonts',
+			allowedWeights: [100, 400, 600, 700], // 100, 200, 300, 400, 500, 600, 700, 800, 900
+			allowedStyles: ['normal'], // normal, italic
+			watch: true,
+			reloadOnChange: true,
+			debug: true,
+			scss: {
+				enabled: true,
+				output: '@scss/base/_fonts.scss',
 			},
-		},
+		}),
 
 		// HTML минификация
 		createHtmlPlugin({
