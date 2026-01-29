@@ -11,11 +11,8 @@
 		"fonts:build": "node scripts/build-fonts.js",
 		"images:optimize": "node scripts/optimize-images.js",
 		"svg:trim": "node scripts/trim-svg.js",
-		"svg:trim:icons": "node scripts/trim-icon-svg.js",
-		"icons:hero": "node scripts/build-hero-sprite.js",
-		"icons:html": "node scripts/generate-icons-html.js",
 		"deploy:gh": "vite build && gh-pages -d dist",
-		"assets:prepare": "npm run fonts:build && npm run images:optimize && npm run svg:trim && npm run icons:hero"
+		"assets:prepare": "npm run fonts:build && npm run images:optimize && npm run svg:trim"
 	},
 	"browserslist": [
 		"> 1%",

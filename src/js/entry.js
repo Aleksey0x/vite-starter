@@ -1,4 +1,5 @@
 import '@js/main.js';
 import '@scss/main.scss';
-import 'virtual:svg-icons-register';
+import { loadRestIcons } from '@js/icons-loader.js';
+loadRestIcons();
 
