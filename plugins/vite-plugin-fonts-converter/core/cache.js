@@ -1,5 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
+import { validatePath } from './path-utils.js';
 
 export const CACHE_VERSION = 1;
 
@@ -37,7 +38,9 @@ export async function loadCache(outputDir, cacheFileName) {
 }
 
 export async function writeCache(outputDir, cacheFileName, cacheData) {
-	await fs.ensureDir(outputDir);
 	const cachePath = path.join(outputDir, cacheFileName);
+	validatePath(cachePath);
+
+	await fs.ensureDir(outputDir);
 	await fs.writeFile(cachePath, JSON.stringify(cacheData, null, 2));
 }

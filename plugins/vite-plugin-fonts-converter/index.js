@@ -2,7 +2,7 @@ import { createPlugin } from './plugin.js';
 
 function normalizeOptions(userOptions) {
 	if (!userOptions.sourceDir || !userOptions.outputDir) {
-		throw new Error('[vite-plugin-fonts-converter] Both sourceDir and outputDir are required and must be aliases');
+		throw new Error('[fonts-converter] sourceDir and outputDir are required');
 	}
 
 	const options = {
@@ -16,19 +16,20 @@ function normalizeOptions(userOptions) {
 
 	const rawScss = userOptions.scss;
 	let scss = null;
+
 	if (rawScss === false) {
-		scss = { enabled: false, output: null, format: 'scss' };
+		scss = { enabled: false, output: null, urlAlias: null };
 	} else if (rawScss && typeof rawScss === 'object') {
 		if (!rawScss.output) {
-			throw new Error('[vite-plugin-fonts-converter] scss.output must be provided as an alias');
+			throw new Error('[fonts-converter] scss.output is required');
 		}
 		scss = {
 			enabled: true,
-			format: 'scss',
+			urlAlias: rawScss.urlAlias || userOptions.outputDir,
 			...rawScss,
 		};
 	} else {
-		throw new Error('[vite-plugin-fonts-converter] scss.output must be explicitly provided as an alias');
+		throw new Error('[fonts-converter] scss.output is required');
 	}
 
 	return { ...options, scss };

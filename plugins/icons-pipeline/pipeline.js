@@ -1,40 +1,47 @@
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { optimizeSvg } from './svg-optimizer.js';
 import { buildSprite } from './sprite-builder.js';
 import { generateCatalog } from './html-catalog.js';
+import { validatePath } from './path-utils.js';
 
 // Единая точка входа пайплайна обработки иконок
 // Читает svg из rawDir, делит на critical/rest, строит спрайты и dev-каталог
 export async function runPipeline(config) {
 	const { rawDir, outDir, catalogDir, rules, logger } = config;
 
-	// Если директории с исходниками нет — просто предупреждаем и выходим
-	if (!fs.existsSync(rawDir)) {
+	if (!existsSync(rawDir)) {
 		logger?.warn(`Icons source directory not found: ${rawDir}`);
 		return;
 	}
 
-	// Берем только svg-файлы из сырой директории
-	const files = fs.readdirSync(rawDir).filter((f) => f.endsWith('.svg'));
+	const allFiles = await fs.readdir(rawDir);
+	const files = allFiles.filter((f) => f.endsWith('.svg'));
 	if (!files.length) {
 		logger?.warn('No SVG files found');
 		return;
 	}
 
-	// Список имён критичных иконок (остальные пойдут в rest)
 	const criticalNames = new Set(rules.critical || []);
+	const foundNames = new Set();
 	const criticalIcons = [];
 	const restIcons = [];
 
-	// Пробегаемся по всем svg и оптимизируем каждую
-	for (const file of files) {
-		const name = path.basename(file, '.svg');
-		const input = fs.readFileSync(path.join(rawDir, file), 'utf8');
+	const contents = await Promise.all(
+		files.map(async (file) => {
+			const content = await fs.readFile(path.join(rawDir, file), 'utf8');
+			return { file, content };
+		})
+	);
 
-		const result = optimizeSvg(input, 0);
+	for (const { file, content } of contents) {
+		const name = path.basename(file, '.svg');
+		foundNames.add(name);
+
+		const result = optimizeSvg(content, 0);
 		if (!result) {
-			logger?.warn(`Failed to optimize: ${file}`);
+			logger?.warn(`Skipped (not a simple path icon): ${file}`);
 			continue;
 		}
 
@@ -47,22 +54,37 @@ export async function runPipeline(config) {
 		}
 	}
 
-	// Гарантируем, что директория для спрайтов существует
-	fs.mkdirSync(outDir, { recursive: true });
+	for (const name of criticalNames) {
+		if (!foundNames.has(name)) {
+			logger?.warn(`Critical icon not found: ${name}`);
+		}
+	}
 
-	// Строим два спрайта: critical (hero-*) и остальные (icon-*)
-	const criticalSprite = buildSprite(criticalIcons, 'hero-');
-	const restSprite = buildSprite(restIcons, 'icon-');
+	await fs.mkdir(outDir, { recursive: true });
 
-	fs.writeFileSync(path.join(outDir, 'critical-sprite.svg'), criticalSprite);
-	fs.writeFileSync(path.join(outDir, 'rest-sprite.svg'), restSprite);
+	const criticalSpritePath = path.join(outDir, 'critical-sprite.svg');
+	const restSpritePath = path.join(outDir, 'rest-sprite.svg');
 
-	// Собираем dev‑страницу каталога иконок
+	validatePath(criticalSpritePath);
+	validatePath(restSpritePath);
+
+	if (criticalIcons.length) {
+		await fs.writeFile(criticalSpritePath, buildSprite(criticalIcons));
+	} else if (existsSync(criticalSpritePath)) {
+		await fs.unlink(criticalSpritePath);
+	}
+
+	if (restIcons.length) {
+		await fs.writeFile(restSpritePath, buildSprite(restIcons));
+	} else if (existsSync(restSpritePath)) {
+		await fs.unlink(restSpritePath);
+	}
+
 	if (catalogDir) {
-		const catalogHtml = generateCatalog(criticalIcons, restIcons);
 		const catalogPath = path.join(catalogDir, 'icons.html');
-		fs.mkdirSync(path.dirname(catalogPath), { recursive: true });
-		fs.writeFileSync(catalogPath, catalogHtml);
+		validatePath(catalogPath);
+		await fs.mkdir(path.dirname(catalogPath), { recursive: true });
+		await fs.writeFile(catalogPath, generateCatalog(criticalIcons, restIcons));
 	}
 
 	logger?.info(`Icons processed: ${criticalIcons.length} critical, ${restIcons.length} rest`);
