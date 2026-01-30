@@ -22,6 +22,16 @@ pnpm-debug.log*
 .vscode/
 *.swp
 
+# Windows reserved names (prevent accidental creation)
+nul
+NUL
+con
+CON
+prn
+PRN
+aux
+AUX
+
 # cache
 .eslintcache
 

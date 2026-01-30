@@ -11,13 +11,13 @@ function escapeHtml(value) {
 export function generateCatalog(criticalIcons, restIcons) {
 	const sections = [];
 
-	// Блок с критичными иконками (подключаются как hero-*)
+	// Блок с критичными иконками
 	if (criticalIcons.length) {
 		const grid = criticalIcons
 			.map(({ name, svg }) => {
 				const snippet = [
 					'<svg class="icon" aria-hidden="true" focusable="false">',
-					`  <use href="#hero-${name}"></use>`,
+					`  <use href="#${name}"></use>`,
 					'</svg>',
 				].join('\n');
 				const code = escapeHtml(snippet);
@@ -38,13 +38,13 @@ export function generateCatalog(criticalIcons, restIcons) {
 		</section>`);
 	}
 
-	// Блок с остальными иконками (подключаются как icon-*)
+	// Блок с остальными иконками
 	if (restIcons.length) {
 		const grid = restIcons
 			.map(({ name, svg }) => {
 				const snippet = [
 					'<svg class="icon" aria-hidden="true" focusable="false">',
-					`  <use href="#icon-${name}"></use>`,
+					`  <use href="#${name}"></use>`,
 					'</svg>',
 				].join('\n');
 				const code = escapeHtml(snippet);

@@ -10,15 +10,16 @@ import { updateFontsState, createState } from './core/state.js';
 import { cleanupGeneratedOutputs } from './core/cleanup.js';
 import { createQueue } from './core/queue.js';
 
+const CACHE_FILE = '.fonts-cache.json';
+
 function resolveAlias(aliasPath, config) {
 	if (!aliasPath.startsWith('@')) {
-		throw new Error(`[vite-plugin-fonts-converter] Path must be an alias starting with '@', got: ${aliasPath}`);
+		throw new Error(`Path must be alias starting with '@': ${aliasPath}`);
 	}
 
 	const aliases = config.resolve?.alias || {};
 	const aliasEntries = Array.isArray(aliases) ? aliases : Object.entries(aliases);
 
-	// Сортируем по длине ключа (длинные первыми), чтобы '@fonts/raw' матчился раньше '@fonts'
 	const sortedEntries = aliasEntries
 		.map(entry => Array.isArray(entry) ? entry : [entry.find, entry.replacement])
 		.sort((a, b) => b[0].length - a[0].length);
@@ -34,52 +35,67 @@ function resolveAlias(aliasPath, config) {
 		}
 	}
 
-	throw new Error(`[vite-plugin-fonts-converter] Alias not found in config.resolve.alias: ${aliasPath}`);
+	throw new Error(`Alias not found: ${aliasPath}`);
 }
 
 export function createPlugin(options) {
 	const logger = createLogger(options.debug);
-	const cacheFileName = '.fonts-cache.json';
 
 	let server = null;
 	let rootDir = null;
 	let isBuilding = false;
 	let cache = null;
 	let fontsById = createState();
+	let isShuttingDown = false;
+
 	const queue = createQueue(logger);
 
-	const toRel = (filePath) => path.relative(options.sourceDir, filePath);
+	// Resolved paths (set in configResolved)
+	let resolvedSourceDir = null;
+	let resolvedOutputDir = null;
+	let resolvedScssOutput = null;
+	let resolvedUrlAlias = null;
+
+	const toRel = (filePath) => path.relative(resolvedSourceDir, filePath);
 	const toOutputName = (fileName) => `${fileName}.woff2`;
-	const getOutputPath = (fileName) => path.join(options.outputDir, toOutputName(fileName));
+	const getOutputPath = (fileName) => path.join(resolvedOutputDir, toOutputName(fileName));
+
+	async function ensureCache() {
+		if (!cache) {
+			cache = await loadCache(resolvedOutputDir, CACHE_FILE);
+		}
+		return cache;
+	}
 
 	async function processFonts() {
-		if (!(await fs.pathExists(options.sourceDir))) {
+		if (!(await fs.pathExists(resolvedSourceDir))) {
 			return { fonts: [], nextCache: createEmptyCache(), stats: null };
 		}
 
 		let ttfFiles = [];
 		try {
-			ttfFiles = await collectTtfFiles(options.sourceDir);
+			ttfFiles = await collectTtfFiles(resolvedSourceDir);
 		} catch (error) {
-			logger.logError('ошибка чтения директории', error);
+			logger.logError('scan failed', error);
 			return { fonts: [], nextCache: createEmptyCache(), stats: null };
 		}
 
-		const previousCache = cache ?? await loadCache(options.outputDir, cacheFileName);
-		if (!cache) cache = previousCache;
-
+		const previousCache = await ensureCache();
 		const nextCache = createEmptyCache();
 		const fonts = [];
-		let converted = 0;
-		let cached = 0;
-		let skipped = 0;
-		let errors = 0;
+		let converted = 0, cached = 0, skipped = 0, errors = 0;
+
+		const opts = { ...options, resolvedSourceDir, resolvedOutputDir };
 
 		for (const ttfPath of ttfFiles) {
-			const result = await convertSingleFont(ttfPath, options, previousCache, logger);
+			if (isShuttingDown) break;
+
+			const result = await convertSingleFont(ttfPath, opts, previousCache, logger);
+
 			if (result.fontInfo) {
 				fonts.push(result.fontInfo);
 			}
+
 			if (result.stat && result.fontInfo) {
 				const relPath = toRel(ttfPath);
 				nextCache.files[relPath] = {
@@ -88,60 +104,62 @@ export function createPlugin(options) {
 					output: toOutputName(result.fontInfo.fileName),
 				};
 			}
-			if (result.status === 'converted') converted += 1;
-			if (result.status === 'cached') cached += 1;
-			if (result.status === 'skipped') skipped += 1;
-			if (result.status === 'error') errors += 1;
+
+			if (result.status === 'converted') converted++;
+			if (result.status === 'cached') cached++;
+			if (result.status === 'skipped') skipped++;
+			if (result.status === 'error') errors++;
 		}
 
 		nextCache.generated = fonts.map((font) => toOutputName(font.fileName));
 
-		return {
-			fonts,
-			nextCache,
-			stats: { converted, cached, skipped, errors },
-		};
+		return { fonts, nextCache, stats: { converted, cached, skipped, errors } };
 	}
 
 	async function processAllFonts() {
+		if (isShuttingDown) return;
+
 		const startedAt = Date.now();
-		logger.log(isBuilding ? 'start build' : 'start dev');
+		logger.log(isBuilding ? 'build start' : 'dev start');
 
-		const previousCache = cache ?? await loadCache(options.outputDir, cacheFileName);
-		if (!cache) cache = previousCache;
-
+		const previousCache = await ensureCache();
 		const { fonts, nextCache, stats } = await processFonts();
+
+		if (isShuttingDown) return;
+
 		fontsById = updateFontsState(fontsById, fonts);
 
-		const removed = await cleanupGeneratedOutputs(options.outputDir, nextCache.generated, previousCache);
+		const removed = await cleanupGeneratedOutputs(resolvedOutputDir, nextCache.generated, previousCache);
 
 		if (options.scss.enabled) {
-			await writeScss(options.scss.output, [...fontsById.values()]);
+			await writeScss(resolvedScssOutput, [...fontsById.values()], resolvedUrlAlias);
 		}
 
-		await writeCache(options.outputDir, cacheFileName, nextCache);
+		await writeCache(resolvedOutputDir, CACHE_FILE, nextCache);
 		cache = nextCache;
 
 		const elapsed = Date.now() - startedAt;
 		if (stats) {
-			logger.log(`summary: ${fontsById.size} fonts, ${stats.converted} converted, ${stats.cached} cached, ${stats.skipped} skipped, ${removed} removed (${elapsed}ms)`);
+			logger.log(`done: ${fontsById.size} fonts, ${stats.converted} new, ${stats.cached} cached, ${stats.skipped} skipped, ${removed} removed (${elapsed}ms)`);
 			if (stats.errors > 0) logger.log(`errors: ${stats.errors}`);
 		}
 	}
 
 	async function removeFontByPath(ttfPath) {
 		const relPath = toRel(ttfPath);
-		const cacheState = cache ?? await loadCache(options.outputDir, cacheFileName);
-		if (!cache) cache = cacheState;
+		const cacheState = await ensureCache();
 
 		const cached = cacheState.files?.[relPath];
 		if (cached?.output && cacheState.generated?.includes(cached.output)) {
-			await fs.remove(path.join(options.outputDir, cached.output));
+			await fs.remove(path.join(resolvedOutputDir, cached.output));
 		}
 
-		delete cacheState.files?.[relPath];
+		if (cacheState.files && cacheState.files[relPath]) {
+			delete cacheState.files[relPath];
+		}
+
 		cacheState.generated = (cacheState.generated ?? []).filter((file) => file !== cached?.output);
-		await writeCache(options.outputDir, cacheFileName, cacheState);
+		await writeCache(resolvedOutputDir, CACHE_FILE, cacheState);
 		cache = cacheState;
 
 		const info = parseFontInfo(ttfPath);
@@ -152,10 +170,13 @@ export function createPlugin(options) {
 
 	function tryCssReload() {
 		if (!server || !options.scss.enabled) return false;
-		const rel = path.relative(rootDir, options.scss.output).replace(/\\/g, '/');
+
+		const rel = path.relative(rootDir, resolvedScssOutput).replace(/\\/g, '/');
 		const url = rel.startsWith('/') ? rel : `/${rel}`;
 		const mod = server.moduleGraph.getModuleByUrl(url);
+
 		if (!mod) return false;
+
 		server.ws.send({
 			type: 'update',
 			updates: [{
@@ -165,6 +186,7 @@ export function createPlugin(options) {
 				timestamp: Date.now(),
 			}],
 		});
+
 		return true;
 	}
 
@@ -176,31 +198,33 @@ export function createPlugin(options) {
 	}
 
 	async function handleFileChange(filePath) {
+		if (isShuttingDown) return;
 		if (!filePath.toLowerCase().endsWith('.ttf')) return;
+
+		const opts = { ...options, resolvedSourceDir, resolvedOutputDir };
 
 		if (!(await fs.pathExists(filePath))) {
 			await removeFontByPath(filePath);
 			if (options.scss.enabled) {
-				await writeScss(options.scss.output, [...fontsById.values()]);
+				await writeScss(resolvedScssOutput, [...fontsById.values()], resolvedUrlAlias);
 			}
 			reloadClient();
 			return;
 		}
 
-		const cacheState = cache ?? await loadCache(options.outputDir, cacheFileName);
-		if (!cache) cache = cacheState;
-
-		const result = await convertSingleFont(filePath, options, cacheState, logger);
+		const cacheState = await ensureCache();
+		const result = await convertSingleFont(filePath, opts, cacheState, logger);
 		const relPath = toRel(filePath);
 
 		if (result.status === 'skipped' || result.status === 'error') {
 			await removeFontByPath(filePath);
 		} else if (result.fontInfo && result.stat) {
 			const existing = fontsById.get(result.fontInfo.id);
+
 			if (existing && existing.fileName !== result.fontInfo.fileName) {
 				const oldOutput = toOutputName(existing.fileName);
 				if (cacheState.generated?.includes(oldOutput)) {
-					await fs.remove(path.join(options.outputDir, oldOutput));
+					await fs.remove(path.join(resolvedOutputDir, oldOutput));
 					cacheState.generated = cacheState.generated.filter((file) => file !== oldOutput);
 				}
 			}
@@ -214,16 +238,19 @@ export function createPlugin(options) {
 				fontId: result.fontInfo.id,
 				output: toOutputName(result.fontInfo.fileName),
 			};
+
 			if (!cacheState.generated.includes(cacheState.files[relPath].output)) {
 				cacheState.generated.push(cacheState.files[relPath].output);
 			}
-			await writeCache(options.outputDir, cacheFileName, cacheState);
+
+			await writeCache(resolvedOutputDir, CACHE_FILE, cacheState);
 			cache = cacheState;
 		}
 
 		if (options.scss.enabled) {
-			await writeScss(options.scss.output, [...fontsById.values()]);
+			await writeScss(resolvedScssOutput, [...fontsById.values()], resolvedUrlAlias);
 		}
+
 		reloadClient();
 	}
 
@@ -236,17 +263,20 @@ export function createPlugin(options) {
 			rootDir = config.root;
 
 			try {
-				options.sourceDir = resolveAlias(options.sourceDir, config);
-				options.outputDir = resolveAlias(options.outputDir, config);
-				options.scss.output = resolveAlias(options.scss.output, config);
+				resolvedSourceDir = resolveAlias(options.sourceDir, config);
+				resolvedOutputDir = resolveAlias(options.outputDir, config);
+				resolvedScssOutput = options.scss.enabled ? resolveAlias(options.scss.output, config) : null;
+				resolvedUrlAlias = options.scss.urlAlias || options.outputDir;
 			} catch (error) {
-				throw new Error(`[vite-plugin-fonts-converter] Failed to resolve aliases: ${error.message}`);
+				throw new Error(`[fonts-converter] ${error.message}`);
 			}
 
-			logger.debug(`mode ${isBuilding ? 'build' : 'dev'}`);
-			logger.log(`sourceDir resolved: ${options.sourceDir}`);
-			logger.log(`outputDir resolved: ${options.outputDir}`);
-			logger.log(`scss.output resolved: ${options.scss.output}`);
+			logger.debug(`mode: ${isBuilding ? 'build' : 'dev'}`);
+			logger.log(`source: ${resolvedSourceDir}`);
+			logger.log(`output: ${resolvedOutputDir}`);
+			if (resolvedScssOutput) {
+				logger.log(`scss: ${resolvedScssOutput}`);
+			}
 		},
 
 		async buildStart() {
@@ -260,13 +290,17 @@ export function createPlugin(options) {
 			queue.enqueue(() => processAllFonts());
 
 			if (options.watch && !isBuilding) {
-				server.watcher.add(options.sourceDir);
+				server.watcher.add(resolvedSourceDir);
 
 				const onChange = (filePath) => queue.enqueue(() => handleFileChange(filePath));
 				server.watcher.on('change', onChange);
 				server.watcher.on('add', onChange);
 				server.watcher.on('unlink', onChange);
 			}
+
+			server.httpServer?.on('close', () => {
+				isShuttingDown = true;
+			});
 		},
 	};
 }
