@@ -1,0 +1,20 @@
+---
+description: Code quality and best practices
+globs:
+  alwaysApply: true
+---
+
+Стек проекта:
+
+- Vanilla JS
+- Vite
+- SCSS / Bootstrap
+- JavaScript (не TypeScript)
+
+Правила:
+
+- избегай магии
+- избегай лишних абстракций
+- prefer build-time решения
+- не переписывай код без необходимости
+- не добавляй функциональность "на будущее"
