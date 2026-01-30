@@ -87,6 +87,7 @@ export default defineConfig({
 			scss: {
 				enabled: true,
 				output: '@scss/base/_fonts.scss',
+				urlAlias: '../../assets/fonts',
 			},
 		}),
 
